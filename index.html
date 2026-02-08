@@ -3,164 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[SOURCE] // Exclusive Audio Access</title>
     
-    <title>[SOURCE] — Primary Audio Storage</title>
-    <meta name="description" content="Direct source of exclusive audio tracks. Original quality, no ads.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
-    
     <style>
         :root {
-            --bg: #050505;
-            --card: #111111;
+            --bg: #030303;
             --accent: #00ff41;
-            --text: #ffffff;
-            --dim: #666;
-            --header-font: 'Consolas', 'Courier New', monospace;
+            --accent-dim: rgba(0, 255, 65, 0.15);
+            --card-bg: rgba(15, 15, 15, 0.8);
+            --text: #e0e0e0;
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
         body {
             background: var(--bg);
+            background-image: 
+                radial-gradient(circle at 50% 0%, #0a1f0e 0%, transparent 50%),
+                linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
             color: var(--text);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            margin: 0; padding: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 0; padding: 0;
             display: flex; flex-direction: column; align-items: center;
-            scroll-behavior: smooth;
+            min-height: 100vh;
         }
 
-        header { text-align: center; margin-bottom: 30px; width: 100%; max-width: 700px; }
-        
-        .logo-link { text-decoration: none; color: inherit; display: inline-block; transition: 0.2s; padding: 10px; }
-        .logo-link:hover { transform: scale(1.05); }
-        
-        .logo-text { font-family: var(--header-font); font-size: 2.5rem; font-weight: bold; color: var(--accent); letter-spacing: 5px; }
-        .cursor { font-size: 2.5rem; color: var(--accent); animation: blink 1s step-end infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        /* Анимированный сканер на фоне */
+        body::before {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.1;
+            animation: scan 8s linear infinite;
+        }
 
-        .tagline { color: var(--dim); font-size: 0.7rem; text-transform: uppercase; margin-top: 10px; letter-spacing: 2px; font-family: var(--header-font); }
+        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+
+        header {
+            padding: 60px 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .logo-container {
+            display: inline-block;
+            position: relative;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .logo-container:hover { transform: scale(1.05); }
+
+        .logo-text {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            color: #fff;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-text span { color: var(--accent); }
+
+        .logo-blur {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--accent);
+            filter: blur(40px); opacity: 0.3;
+            z-index: 0;
+        }
+
+        .search-container {
+            width: 90%; max-width: 600px;
+            margin-bottom: 50px;
+            position: relative;
+        }
 
         .search-box {
-            width: 100%; max-width: 600px;
-            background: var(--card);
-            border: 1px solid #222;
-            padding: 15px; border-radius: 12px;
-            color: var(--accent); font-size: 1rem;
-            outline: none; margin-bottom: 30px;
-            font-family: var(--header-font);
+            width: 100%;
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px 25px;
+            border-radius: 100px;
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
             box-sizing: border-box;
+            font-family: inherit;
         }
 
-        .container { width: 100%; max-width: 700px; }
+        .search-box:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-dim);
+        }
+
+        .container {
+            width: 90%; max-width: 800px;
+            padding-bottom: 100px;
+        }
 
         .track-card {
-            background: var(--card);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #1a1a1a;
-            transition: 0.3s;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            transition: 0.4s ease;
         }
 
-        .track-card:target {
-            border-color: var(--accent);
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
-            background: #161616;
+        .track-card:hover {
+            border-color: rgba(0, 255, 65, 0.4);
+            background: rgba(20, 20, 20, 0.9);
+            transform: translateY(-5px);
         }
 
-        .track-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .track-info .artist {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-        .artist { color: var(--accent); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; }
-        .title { font-size: 1.4rem; display: block; margin: 5px 0; }
-        .stats { font-size: 0.7rem; color: var(--dim); font-family: var(--header-font); }
+        .track-info .title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .track-info .meta {
+            font-size: 0.8rem;
+            color: var(--dim);
+        }
+
+        .audio-player {
+            grid-column: 1 / span 2;
+            margin-top: 20px;
+        }
 
         audio {
-            width: 100%; height: 35px;
-            filter: invert(100%) hue-rotate(90deg) brightness(1.5);
-            margin: 15px 0;
+            width: 100%;
+            height: 40px;
+            filter: invert(1) hue-rotate(90deg) brightness(1.2);
+            opacity: 0.7;
+        }
+
+        .download-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+            grid-column: 1 / span 2;
         }
 
         .download-btn {
-            display: block;
-            background: var(--accent);
+            background: #fff;
             color: #000;
-            text-align: center;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 12px 30px;
+            border-radius: 12px;
             text-decoration: none;
-            font-weight: bold;
-            text-transform: uppercase;
+            font-weight: 700;
             transition: 0.3s;
+            font-size: 0.9rem;
         }
-        .download-btn:hover { box-shadow: 0 0 20px var(--accent); }
 
-        .support-section {
-            margin-top: 50px; padding: 20px;
-            background: #111; border-radius: 15px;
-            text-align: center; border: 1px dashed var(--dim);
-            width: 100%; max-width: 400px;
+        .download-btn:hover {
+            background: var(--accent);
+            box-shadow: 0 10px 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .support-card {
+            background: linear-gradient(135deg, #111, #050505);
+            border: 1px solid var(--accent);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 40px;
         }
 
         .support-btn {
-            display: inline-block; margin-top: 15px;
-            color: var(--accent); text-decoration: none;
-            border: 1px solid var(--accent); padding: 10px 25px;
-            border-radius: 25px; font-weight: bold;
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 5px;
+            font-weight: 700;
             transition: 0.3s;
         }
-        .support-btn:hover { background: var(--accent); color: #000; }
 
-        footer { margin: 50px 0; font-size: 0.6rem; color: var(--dim); text-align: center; font-family: var(--header-font); line-height: 1.5; }
+        .support-btn:hover { letter-spacing: 2px; }
+
+        footer {
+            padding: 40px;
+            font-size: 0.7rem;
+            color: #444;
+            letter-spacing: 3px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .logo-text { font-size: 2.5rem; }
+            .track-card { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="#" class="logo-link">
-        <span class="logo-text">&lt;SOURCE<span class="cursor">_</span>&gt;</span>
-    </a>
-    <div class="tagline">Primary Audio Storage // No Metadata Pollution</div>
+    <div class="logo-container">
+        <div class="logo-blur"></div>
+        <div class="logo-text">SOU<span>RC</span>E</div>
+    </div>
+    <div style="color: var(--dim); font-size: 0.7rem; letter-spacing: 4px; margin-top: 10px;">DECRYPTED ACCESS ONLY</div>
 </header>
 
-<input type="text" id="search" class="search-box" placeholder="ПОИСК ПО АРХИВУ..." onkeyup="search()">
+<div class="search-container">
+    <input type="text" id="search" class="search-box" placeholder="Search database for tracks..." onkeyup="search()">
+</div>
 
 <div class="container" id="vault">
     
     <div class="track-card" id="supersonic">
         <div class="track-info">
-            <span class="artist">Big Baby Tape</span>
-            <span class="title">Supersonic (feat. Aarne)</span>
-            <span class="stats">320kbps // ⬇ 12,450 downloads</span>
+            <div class="artist">Big Baby Tape</div>
+            <div class="title">Supersonic</div>
+            <div class="meta">320 KBPS // FLAC DECODED // 12.4K DL</div>
         </div>
-        <audio controls controlsList="nodownload">
-            <source src="#" type="audio/mpeg">
-        </audio>
-        <a href="#" class="download-btn">DOWNLOAD MP3</a>
-    </div>
-
-    <div class="track-card" id="million">
-        <div class="track-info">
-            <span class="artist">Big Baby Tape & Kizaru</span>
-            <span class="title">Million</span>
-            <span class="stats">320kbps // ⬇ 24,110 downloads</span>
+        <div class="audio-player">
+            <audio controls controlsList="nodownload">
+                <source src="#" type="audio/mpeg">
+            </audio>
         </div>
-        <audio controls controlsList="nodownload">
-            <source src="#" type="audio/mpeg">
-        </audio>
-        <a href="#" class="download-btn">DOWNLOAD MP3</a>
+        <div class="download-area">
+            <a href="#" class="download-btn">GET TRACK</a>
+        </div>
     </div>
 
 </div>
 
-<div class="support-section">
-    <div style="color: var(--accent); font-weight: bold; margin-bottom: 5px;">[SUPPORT PROJECT]</div>
-    <div style="font-size: 0.7rem; color: var(--dim);">Помоги нам держать серверы без рекламы</div>
-    <a href="#" class="support-btn">MONOBANK</a>
+<div class="support-card">
+    <div style="font-size: 1.5rem; font-weight: 700;">MAINTAIN THE CORE</div>
+    <div style="color: #666; margin-top: 10px;">Help us keep the archive ad-free and fast.</div>
+    <a href="#" class="support-btn">SEND SUPPORT</a>
 </div>
 
 <footer>
-    SOURCE_SYSTEM v1.0 // NON-COMMERCIAL ARCHIVE<br>
-    STATUS: OPERATIONAL // DATABASE: ENCRYPTED
+    &copy; 2026 SOURCE SYSTEM / ALL RIGHTS RESERVED
 </footer>
 
 <script>
