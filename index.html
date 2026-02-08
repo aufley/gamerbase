@@ -28,7 +28,7 @@
         header { padding: 60px 20px 30px; text-align: center; }
         .logo-text { 
             font-size: 3.5rem; font-weight: 700; color: #fff; letter-spacing: -2px;
-            animation: glow 3s infinite alternate;
+            animation: glow 3s infinite alternate; text-transform: uppercase;
         }
         .logo-text span { color: var(--accent); }
 
@@ -37,15 +37,15 @@
             to { text-shadow: 0 0 20px var(--accent); }
         }
 
-        /* Дашборд системы (замена витрины) */
+        /* Системный Дашборд */
         #system-dashboard {
             width: 90%; max-width: 500px; text-align: center;
             margin-bottom: 40px; font-family: monospace; border: 1px solid #111;
-            padding: 20px; border-radius: 15px; background: rgba(255,255,255,0.01);
-            transition: 0.5s ease;
+            padding: 25px; border-radius: 15px; background: rgba(255,255,255,0.01);
+            transition: 0.4s;
         }
         .status-tag { color: var(--accent); font-weight: bold; }
-        .log-line { font-size: 0.65rem; color: var(--dim); margin-top: 5px; text-transform: uppercase; }
+        .log-line { font-size: 0.65rem; color: var(--dim); margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
 
         /* Поиск */
         .search-container { width: 90%; max-width: 600px; margin-bottom: 30px; }
@@ -55,7 +55,7 @@
             font-size: 1.1rem; outline: none; transition: 0.4s;
             backdrop-filter: blur(10px); box-sizing: border-box; font-family: inherit;
         }
-        .search-box:focus { border-color: var(--accent); box-shadow: 0 0 20px rgba(0,255,65,0.1); }
+        .search-box:focus { border-color: var(--accent); box-shadow: 0 0 25px rgba(0,255,65,0.15); }
         .search-box::placeholder { color: #333; transition: 0.3s; }
         .search-box:focus::placeholder { opacity: 0; transform: translateX(10px); }
 
@@ -64,22 +64,54 @@
             display: flex; gap: 10px; margin-bottom: 40px; overflow-x: auto;
             width: 95%; max-width: 600px; scrollbar-width: none;
         }
+        .genres-nav::-webkit-scrollbar { display: none; }
         .genre-btn {
             background: transparent; border: 1px solid #222; color: var(--dim);
             padding: 8px 18px; border-radius: 50px; cursor: pointer;
-            font-size: 0.75rem; text-transform: uppercase; transition: 0.3s;
+            font-size: 0.75rem; text-transform: uppercase; transition: 0.3s; white-space: nowrap;
         }
-        .genre-btn.active, .genre-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .genre-btn.active, .genre-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,65,0.05); }
 
+        /* Контейнер выдачи */
         .container { width: 90%; max-width: 1100px; padding-bottom: 100px; }
         .section-title {
             font-size: 0.7rem; color: var(--accent); letter-spacing: 3px;
             text-transform: uppercase; margin-bottom: 25px; display: none;
+            align-items: center; gap: 10px;
         }
+        .section-title::after { content: ""; height: 1px; flex: 1; background: #222; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 
         .track-card {
             background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 20px; padding: 25px; display: none; /* Скрыто до поиска */
-            transition: 0.
+            border-radius: 20px; padding: 25px; display: none; 
+            transition: 0.3s; backdrop-filter: blur(10px);
+        }
+        .track-card:hover { border-color: var(--accent); transform: translateY(-5px); background: rgba(20, 20, 20, 0.95); }
+
+        .artist { color: var(--accent); font-size: 0.7rem; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; }
+        .title { font-size: 1.5rem; font-weight: 700; margin: 8px 0 20px 0; color: #fff; }
+        
+        audio { width: 100%; height: 35px; filter: invert(1) hue-rotate(80deg); opacity: 0.6; margin-bottom: 10px; }
+
+        .download-btn {
+            display: block; background: #fff; color: #000;
+            text-align: center; padding: 12px; border-radius: 12px;
+            text-decoration: none; font-weight: 700; font-size: 0.85rem; margin-top: 15px;
+            transition: 0.3s;
+        }
+        .download-btn:hover { background: var(--accent); box-shadow: 0 5px 15px rgba(0,255,65,0.4); }
+
+        footer { padding: 50px; color: #151515; font-size: 0.65rem; letter-spacing: 5px; text-align: center; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-text">SOU<span>RC</span>E</div>
+</header>
+
+<div id="system-dashboard">
+    <div style="margin-bottom: 12px; font-size: 0.85rem; letter-spacing: 1px;">
+        [ СТАТУС: <span class="status-tag
