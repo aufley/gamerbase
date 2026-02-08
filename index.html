@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[SOURCE] // Premium Audio Archive</title>
-    <link href="[https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap](https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap)" rel="stylesheet">
+    <title>[SOURCE] // System Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #050505;
+            --bg: #030303;
             --accent: #00ff41;
-            --card-bg: rgba(20, 20, 20, 0.7);
+            --card-bg: rgba(15, 15, 15, 0.9);
             --text: #ffffff;
-            --dim: #555;
-            --glass: rgba(255, 255, 255, 0.03);
+            --dim: #444;
+            --glass: rgba(0, 255, 65, 0.03);
         }
 
         body {
@@ -22,165 +22,64 @@
             font-family: 'Space Grotesk', sans-serif;
             margin: 0; padding: 0;
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+            min-height: 100vh; overflow-x: hidden;
         }
 
-        header { padding: 60px 20px 40px; text-align: center; }
-        
+        header { padding: 60px 20px 30px; text-align: center; }
         .logo-text { 
-            font-size: 4rem; 
-            font-weight: 700; 
-            color: #fff; 
-            letter-spacing: -2px;
-            text-transform: uppercase;
-            animation: glow 3s ease-in-out infinite alternate;
+            font-size: 3.5rem; font-weight: 700; color: #fff; letter-spacing: -2px;
+            animation: glow 3s infinite alternate;
         }
         .logo-text span { color: var(--accent); }
 
         @keyframes glow {
-            from { text-shadow: 0 0 5px rgba(255,255,255,0.1); }
-            to { text-shadow: 0 0 20px var(--accent), 0 0 5px var(--accent); }
+            from { text-shadow: 0 0 5px rgba(0,255,65,0.2); }
+            to { text-shadow: 0 0 20px var(--accent); }
         }
 
-        .search-container { width: 90%; max-width: 600px; margin-bottom: 25px; }
+        /* Дашборд системы (замена витрины) */
+        #system-dashboard {
+            width: 90%; max-width: 500px; text-align: center;
+            margin-bottom: 40px; font-family: monospace; border: 1px solid #111;
+            padding: 20px; border-radius: 15px; background: rgba(255,255,255,0.01);
+            transition: 0.5s ease;
+        }
+        .status-tag { color: var(--accent); font-weight: bold; }
+        .log-line { font-size: 0.65rem; color: var(--dim); margin-top: 5px; text-transform: uppercase; }
+
+        /* Поиск */
+        .search-container { width: 90%; max-width: 600px; margin-bottom: 30px; }
         .search-box {
             width: 100%; background: var(--glass); border: 1px solid #222;
-            padding: 18px 25px; border-radius: 15px; color: var(--accent);
+            padding: 20px; border-radius: 12px; color: var(--accent);
             font-size: 1.1rem; outline: none; transition: 0.4s;
             backdrop-filter: blur(10px); box-sizing: border-box; font-family: inherit;
         }
-        .search-box:focus { border-color: var(--accent); background: rgba(0,255,65,0.05); }
-        .search-box::placeholder { color: var(--dim); transition: 0.3s; }
-        .search-box:focus::placeholder { opacity: 0; transform: translateX(20px); }
+        .search-box:focus { border-color: var(--accent); box-shadow: 0 0 20px rgba(0,255,65,0.1); }
+        .search-box::placeholder { color: #333; transition: 0.3s; }
+        .search-box:focus::placeholder { opacity: 0; transform: translateX(10px); }
 
+        /* Жанры */
         .genres-nav {
-            display: flex; gap: 12px; margin-bottom: 40px; overflow-x: auto;
-            width: 95%; max-width: 600px; padding: 10px; scrollbar-width: none;
+            display: flex; gap: 10px; margin-bottom: 40px; overflow-x: auto;
+            width: 95%; max-width: 600px; scrollbar-width: none;
         }
-        .genres-nav::-webkit-scrollbar { display: none; }
-
         .genre-btn {
-            background: var(--glass); border: 1px solid #222; color: var(--dim);
-            padding: 10px 22px; border-radius: 50px; cursor: pointer;
-            font-size: 0.8rem; text-transform: uppercase; transition: 0.3s; white-space: nowrap;
+            background: transparent; border: 1px solid #222; color: var(--dim);
+            padding: 8px 18px; border-radius: 50px; cursor: pointer;
+            font-size: 0.75rem; text-transform: uppercase; transition: 0.3s;
         }
-        .genre-btn.active, .genre-btn:hover {
-            border-color: var(--accent); color: var(--accent); background: rgba(0,255,65,0.1);
-        }
+        .genre-btn.active, .genre-btn:hover { border-color: var(--accent); color: var(--accent); }
 
         .container { width: 90%; max-width: 1100px; padding-bottom: 100px; }
-
         .section-title {
-            font-size: 0.75rem; color: var(--accent); letter-spacing: 4px;
-            text-transform: uppercase; margin-bottom: 30px;
-            display: flex; align-items: center; gap: 15px;
+            font-size: 0.7rem; color: var(--accent); letter-spacing: 3px;
+            text-transform: uppercase; margin-bottom: 25px; display: none;
         }
-        .section-title::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg, #222, transparent); }
 
-        .grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 
         .track-card {
             background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 24px; padding: 25px; transition: 0.4s;
-            backdrop-filter: blur(15px); position: relative;
-        }
-        .track-card:hover { 
-            border-color: var(--accent); transform: translateY(-8px);
-            background: rgba(30, 30, 30, 0.9); box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-        }
-
-        .artist { color: var(--accent); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-        .title { font-size: 1.6rem; font-weight: 700; margin: 8px 0 20px 0; color: #fff; }
-        
-        audio { width: 100%; height: 35px; filter: invert(1) hue-rotate(80deg); margin-bottom: 20px; }
-
-        .download-btn {
-            display: block; background: #fff; color: #000;
-            text-align: center; padding: 14px; border-radius: 14px;
-            text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.3s;
-        }
-        .download-btn:hover { background: var(--accent); box-shadow: 0 8px 25px rgba(0, 255, 65, 0.4); }
-
-        footer { padding: 60px; color: #222; font-size: 0.7rem; letter-spacing: 3px; text-align: center; }
-    </style>
-</head>
-<body>
-
-<header>
-    <div class="logo-text">SOU<span>RC</span>E</div>
-</header>
-
-<div class="search-container">
-    <input type="text" id="search" class="search-box" placeholder="Найти в архиве..." onkeyup="filterTracks()">
-</div>
-
-<div class="genres-nav">
-    <button class="genre-btn active" onclick="setGenre('all')">Все</button>
-    <button class="genre-btn" onclick="setGenre('trap')">Trap</button>
-    <button class="genre-btn" onclick="setGenre('drill')">Drill</button>
-    <button class="genre-btn" onclick="setGenre('lyrics')">Lyrics</button>
-</div>
-
-<div class="container">
-    <div class="section-title" id="view-title">New Releases</div>
-    <div class="grid" id="track-grid">
-        
-        <div class="track-card" data-genre="trap">
-            <div class="artist">Big Baby Tape</div>
-            <div class="title">Supersonic</div>
-            <audio controls><source src="#" type="audio/mpeg"></audio>
-            <a href="#" class="download-btn">СКАЧАТЬ MP3</a>
-        </div>
-
-        <div class="track-card" data-genre="drill">
-            <div class="artist">Kizaru</div>
-            <div class="title">Million</div>
-            <audio controls><source src="#" type="audio/mpeg"></audio>
-            <a href="#" class="download-btn">СКАЧАТЬ MP3</a>
-        </div>
-
-    </div>
-</div>
-
-<footer>SOURCE DATABASE // v3.9</footer>
-
-<script>
-    let currentGenre = 'all';
-
-    function setGenre(genre) {
-        currentGenre = genre;
-        document.querySelectorAll('.genre-btn').forEach(btn => {
-            btn.classList.remove('active');
-            let btnText = btn.innerText.toLowerCase();
-            if(btnText === (genre === 'all' ? 'все' : genre)) btn.classList.add('active');
-        });
-        filterTracks();
-    }
-
-    function filterTracks() {
-        let input = document.getElementById('search').value.toLowerCase();
-        let cards = document.querySelectorAll('.track-card');
-        let viewTitle = document.getElementById('view-title');
-
-        if (input.length > 0) {
-            viewTitle.innerText = "Результаты поиска";
-        } else {
-            viewTitle.innerText = (currentGenre === 'all' ? "New Releases" : currentGenre.toUpperCase());
-        }
-
-        cards.forEach(card => {
-            let text = card.innerText.toLowerCase();
-            let genre = card.getAttribute('data-genre');
-            let matchesSearch = text.includes(input);
-            let matchesGenre = (currentGenre === 'all' || genre === currentGenre);
-            card.style.display = (matchesSearch && matchesGenre) ? "" : "none";
-        });
-    }
-</script>
-
-</body>
-</html>
+            border-radius: 20px; padding: 25px; display: none; /* Скрыто до поиска */
+            transition: 0.
