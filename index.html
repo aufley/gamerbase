@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[SOURCE] // Exclusive Audio Access</title>
-    
+    <title>[ИСТОЧНИК] // Закрытый Архив</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
@@ -15,6 +14,7 @@
             --card-bg: rgba(15, 15, 15, 0.8);
             --text: #e0e0e0;
             --glass: rgba(255, 255, 255, 0.03);
+            --dim: #555;
         }
 
         body {
@@ -25,248 +25,128 @@
                 linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px);
             background-size: 100% 100%, 30px 30px, 30px 30px;
             color: var(--text);
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
             margin: 0; padding: 0;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Анимированный сканер на фоне */
-        body::before {
-            content: "";
-            position: fixed; top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            opacity: 0.1;
-            animation: scan 8s linear infinite;
-        }
-
-        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
-
-        header {
-            padding: 60px 20px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .logo-container {
-            display: inline-block;
-            position: relative;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .logo-container:hover { transform: scale(1.05); }
+        header { padding: 50px 20px; text-align: center; width: 100%; }
 
         .logo-text {
-            font-size: 4rem;
-            font-weight: 700;
-            letter-spacing: -2px;
-            color: #fff;
-            text-transform: uppercase;
-            position: relative;
-            z-index: 1;
+            font-size: 3.5rem; font-weight: 700; letter-spacing: -2px; color: #fff;
+            text-transform: uppercase; position: relative;
         }
+        .logo-text span { color: var(--accent); text-shadow: 0 0 20px var(--accent); }
 
-        .logo-text span { color: var(--accent); }
+        .status-line { color: var(--dim); font-size: 0.7rem; letter-spacing: 3px; margin-top: 10px; font-family: monospace; }
 
-        .logo-blur {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--accent);
-            filter: blur(40px); opacity: 0.3;
-            z-index: 0;
-        }
-
-        .search-container {
-            width: 90%; max-width: 600px;
-            margin-bottom: 50px;
-            position: relative;
-        }
+        .search-container { width: 90%; max-width: 600px; margin-bottom: 30px; }
 
         .search-box {
-            width: 100%;
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 20px 25px;
-            border-radius: 100px;
-            color: #fff;
-            font-size: 1.1rem;
-            outline: none;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
-            box-sizing: border-box;
-            font-family: inherit;
+            width: 100%; background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px 25px; border-radius: 15px; color: var(--accent);
+            font-size: 1.1rem; outline: none; backdrop-filter: blur(10px);
+            transition: 0.3s; box-sizing: border-box; font-family: inherit;
         }
+        .search-box:focus { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-dim); }
 
-        .search-box:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 20px var(--accent-dim);
-        }
+        .results-count { color: var(--dim); font-size: 0.8rem; margin-bottom: 20px; font-family: monospace; }
 
-        .container {
-            width: 90%; max-width: 800px;
-            padding-bottom: 100px;
-        }
+        .container { width: 90%; max-width: 800px; display: none; } /* Скрыто по умолчанию */
 
         .track-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 24px;
-            padding: 25px;
-            margin-bottom: 25px;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            align-items: center;
-            transition: 0.4s ease;
+            background: var(--card-bg); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 20px;
+            padding: 25px; margin-bottom: 20px; transition: 0.4s;
         }
+        .track-card:hover { border-color: var(--accent); background: rgba(20, 20, 20, 0.9); }
 
-        .track-card:hover {
-            border-color: rgba(0, 255, 65, 0.4);
-            background: rgba(20, 20, 20, 0.9);
-            transform: translateY(-5px);
-        }
+        .artist { color: var(--accent); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
+        .title { font-size: 1.6rem; font-weight: 700; margin: 5px 0; color: #fff; }
+        .meta { font-size: 0.75rem; color: #666; font-family: monospace; }
 
-        .track-info .artist {
-            color: var(--accent);
-            font-size: 0.9rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .track-info .title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 5px 0;
-            color: #fff;
-        }
-
-        .track-info .meta {
-            font-size: 0.8rem;
-            color: var(--dim);
-        }
-
-        .audio-player {
-            grid-column: 1 / span 2;
-            margin-top: 20px;
-        }
-
-        audio {
-            width: 100%;
-            height: 40px;
-            filter: invert(1) hue-rotate(90deg) brightness(1.2);
-            opacity: 0.7;
-        }
-
-        .download-area {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 15px;
-            grid-column: 1 / span 2;
-        }
+        audio { width: 100%; height: 35px; filter: invert(1) hue-rotate(80deg); margin: 15px 0; opacity: 0.6; }
 
         .download-btn {
-            background: #fff;
-            color: #000;
-            padding: 12px 30px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: 0.3s;
-            font-size: 0.9rem;
+            display: inline-block; background: #fff; color: #000;
+            padding: 10px 25px; border-radius: 8px; text-decoration: none;
+            font-weight: 700; transition: 0.3s; font-size: 0.85rem;
         }
+        .download-btn:hover { background: var(--accent); box-shadow: 0 5px 15px rgba(0, 255, 65, 0.4); }
 
-        .download-btn:hover {
-            background: var(--accent);
-            box-shadow: 0 10px 20px rgba(0, 255, 65, 0.3);
-        }
+        footer { padding: 40px; font-size: 0.6rem; color: #333; letter-spacing: 2px; text-align: center; }
 
-        .support-card {
-            background: linear-gradient(135deg, #111, #050505);
-            border: 1px solid var(--accent);
-            border-radius: 24px;
-            padding: 40px;
-            text-align: center;
-            margin-top: 40px;
-        }
-
-        .support-btn {
-            display: inline-block;
-            margin-top: 20px;
-            color: var(--accent);
-            text-decoration: none;
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 5px;
-            font-weight: 700;
-            transition: 0.3s;
-        }
-
-        .support-btn:hover { letter-spacing: 2px; }
-
-        footer {
-            padding: 40px;
-            font-size: 0.7rem;
-            color: #444;
-            letter-spacing: 3px;
-            text-align: center;
-        }
-
-        @media (max-width: 600px) {
-            .logo-text { font-size: 2.5rem; }
-            .track-card { grid-template-columns: 1fr; }
-        }
+        /* Анимация появления */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .show { display: block; animation: fadeIn 0.5s ease forwards; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-container">
-        <div class="logo-blur"></div>
-        <div class="logo-text">SOU<span>RC</span>E</div>
-    </div>
-    <div style="color: var(--dim); font-size: 0.7rem; letter-spacing: 4px; margin-top: 10px;">DECRYPTED ACCESS ONLY</div>
+    <div class="logo-text">ИСТО<span>ЧНИ</span>К</div>
+    <div class="status-line">ДОСТУП К ДАННЫМ: РАЗРЕШЕН // v2.5</div>
 </header>
 
 <div class="search-container">
-    <input type="text" id="search" class="search-box" placeholder="Search database for tracks..." onkeyup="search()">
+    <input type="text" id="search" class="search-box" placeholder="Введите название трека или артиста..." onkeyup="search()">
 </div>
+
+<div id="results-info" class="results-count"></div>
 
 <div class="container" id="vault">
     
-    <div class="track-card" id="supersonic">
+    <div class="track-card">
         <div class="track-info">
             <div class="artist">Big Baby Tape</div>
             <div class="title">Supersonic</div>
-            <div class="meta">320 KBPS // FLAC DECODED // 12.4K DL</div>
+            <div class="meta">КАЧЕСТВО: 320 KBPS // ЗАГРУЗОК: 12.4K</div>
         </div>
-        <div class="audio-player">
-            <audio controls controlsList="nodownload">
-                <source src="#" type="audio/mpeg">
-            </audio>
+        <audio controls><source src="#" type="audio/mpeg"></audio>
+        <a href="#" class="download-btn">СКАЧАТЬ MP3</a>
+    </div>
+
+    <div class="track-card">
+        <div class="track-info">
+            <div class="artist">KIZARU</div>
+            <div class="title">Million</div>
+            <div class="meta">КАЧЕСТВО: 320 KBPS // ЗАГРУЗОК: 24.1K</div>
         </div>
-        <div class="download-area">
-            <a href="#" class="download-btn">GET TRACK</a>
-        </div>
+        <audio controls><source src="#" type="audio/mpeg"></audio>
+        <a href="#" class="download-btn">СКАЧАТЬ MP3</a>
     </div>
 
 </div>
 
-<div class="support-card">
-    <div style="font-size: 1.5rem; font-weight: 700;">MAINTAIN THE CORE</div>
-    <div style="color: #666; margin-top: 10px;">Help us keep the archive ad-free and fast.</div>
-    <a href="#" class="support-btn">SEND SUPPORT</a>
-</div>
-
 <footer>
-    &copy; 2026 SOURCE SYSTEM / ALL RIGHTS RESERVED
+    © 2026 SOURCE SYSTEM // НЕКОММЕРЧЕСКИЙ АРХИВ
 </footer>
 
 <script>
     function search() {
         let input = document.getElementById('search').value.toLowerCase();
+        let container = document.getElementById('vault');
         let cards = document.getElementsByClassName('track-card');
-        for (let i = 0; i < cards.length; i++) {
-            let text = cards[i].innerText.toLowerCase();
-            cards[i].style.display = text.includes(input) ? "" : "none";
+        let resultsInfo = document.getElementById('results-info');
+        let found = 0;
+
+        if (input.length > 0) {
+            container.classList.add('show');
+            for (let i = 0; i < cards.length; i++) {
+                let text = cards[i].innerText.toLowerCase();
+                if (text.includes(input)) {
+                    cards[i].style.display = "";
+                    found++;
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+            resultsInfo.innerText = "НАЙДЕНО СООТВЕТСТВИЙ: " + found;
+        } else {
+            container.classList.remove('show');
+            resultsInfo.innerText = "";
         }
     }
 </script>
